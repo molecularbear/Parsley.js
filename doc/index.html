@@ -228,39 +228,52 @@
             <li><b>javascript</b>: <code>$('#elem').parsley().options.validateIfEmpty = true</code></li>
             <li><b>javascript</b> (when binding for the first time): <code>$('#elem').parsley({validateIfEmpty: true})</code></li>
           </ul>
+          <p><i>Note:</i> the javascript option is the camelcase equivalent of the attribute: <code>validateIfEmpty</code> ⇔ <code>data-parsley-validate-if-empty</code></p>
           <div class="example-group">
-            <p>Here's a <a href="#" class="play">detailed example</a></p>
+            <p>Here's a <a href="#" class="play" data-editors="1011">detailed example</a></p>
             <div class="example hidden">
-              <input id="first" data-parsley-maxlength="42" value="hello"/>
-              <input id="second" value="world"/>
+<input id="first" data-parsley-maxlength="42" value="hello"/>
+<input id="second" value="world"/>
+<p>This shows that Parsley actualizes the options from the data attributes whenever it needs to validate a field.</p>
             </div>
             <div class="example-script">
-              var instance = $('#first').parsley();
-              console.log('maxlength is 42, so field is valid', instance.isValid());
-              $('#first').attr('data-parsley-maxlength', 4);
-              console.log('No longer valid, as maxlength is 4', instance.isValid());
-              // You can access and override options in javascript too:
-              instance.options.maxlength++;
-              console.log('Back to being valid, as maxlength is 5', instance.isValid());
-              // Alternatively, the options can be specified the first time a form/field is bound:
-              var otherInstance = $('#second').parsley({
-                maxlength: 10
-              });
-              console.log('maxlength was initialized with 10', otherInstance.options.maxlength);
-            <div>
+var instance = $('#first').parsley();
+console.log('maxlength is 42, so field is valid', instance.isValid());
+$('#first').attr('data-parsley-maxlength', 4);
+console.log('No longer valid, as maxlength is 4', instance.isValid());
+// You can access and override options in javascript too:
+instance.options.maxlength++;
+console.log('Back to being valid, as maxlength is 5', instance.isValid());
+// Alternatively, the options can be specified the first time a form/field is bound:
+var otherInstance = $('#second').parsley({
+  maxlength: 10
+});
+console.log('maxlength was initialized with 10', otherInstance.options.maxlength);
+            </div>
           </div>
-          <p>
-            As shown in the previous example, Parsley will actualize the options from the data attributes whenever it needs to validate a field.
-          </p>
           <h4>Option inheritance</h4>
           <p>
             Field instances inherit their options from Form instances, and both inherit from the global options. This is a handy way to configure all your form's inputs in a row by passing their config through form.
           </p>
-<pre><code>&lt;form&gt;
-  &lt;input/&gt;
-&lt;/form&gt;
-[...]
-&lt;script&gt;
+          <p>
+            While Form and Field options can be set using either data attributes (as shown in the preceeding section), global options can only be set with javascript:
+          </p>
+          <ul>
+            <li><b>Global option</b>: <code>Parsley.options.maxlength = 42;</code></li>
+            <li><b>Global options</b>: <code>$.extend(Parsley.options, {maxlength: 42, ...});</code></li>
+            <li>Never replace the <code>options</code> objects: <s><code>Parsley.options = {maxlength: 42, ...};</code></s>
+          </ul>
+          <div class="example-group">
+            <p>Here's a <a href="#" class="play" data-editors="1011">detailed example</a></p>
+            <div class="example hidden">
+<form>
+  <input>
+</form>
+<p>
+  This shows that the inheritance of options is automagic. In case you are wondering, they are linked through <code>prototype</code> to achieve this.
+</p>
+            </div>
+            <div class="example-script">
 Parsley.options.maxlength = 42;
 var formInstance = $('form').parsley();
 var field = $('input').parsley();
@@ -269,27 +282,12 @@ Parsley.options.maxlength = 30;
 console.log(field.options.maxlength); // Shows that maxlength is automagically 30
 formInstance.options.maxlength++;
 console.log(field.options.maxlength); // Shows that maxlength is automagically 31
-</code></pre>
-          <p>
-            The previous example shows that the inheritance of options is automagic. In case you are wondering, they are linked through <code>prototype</code> to achieve this.
-          </p>
-
-          <h4>Naming</h4>
-          <p>
-            You can change the DOM API namespace directly using the <code>namespace</code> option. Data attributes with compound names are camelcased for javascript, and their values are automatically converted to the appropriate type (boolean, integer, etc.).
-            For example:
-<pre><code>&lt;input data-my-namespace-priority-enabled="false"&gt;
-[...]
-&lt;script&gt;
-var instance = $('input').parsley({namespace: 'my-namespace-'});
-if (false === instance.options.priorityEnabled)
-  console.log("priorityEnabled was set to false");
-</code></pre>
-          </p>
+            </div>
+          </div>
 
           <h3 id="usage-form">Form</h3>
           <p>
-            When doing <code>$('#target').parsley()</code> or <code>new Parsley('#target');</code> on a <code>&lt;form id="target"&gt;</code> element, it will bind the whole form and its various inputs and return a <code>ParsleyForm</code> instance.
+            When doing <code>$('#target').parsley()</code> on a <code>&lt;form id="target"&gt;</code> element, it will bind the whole form and its various inputs and return a <code>ParsleyForm</code> instance.
           </p>
 
           <h4>Options</h4>
@@ -1462,22 +1460,6 @@ window.Parsley.addAsyncValidator('mycustom', function (xhr) {
     <script type="text/javascript" src="assets/docs.js"></script>
     <script type="text/javascript" src="../dist/parsley.min.js"></script>
 
-    <script type="text/javascript">
-
-      try {
-        hljs.initHighlightingOnLoad();
-      } catch ( err ) {}
-
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-37229467-1']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-    </script>
-
+    <script type="text/javascript" src="assets/example.js"></script>
   </body>
 </html>

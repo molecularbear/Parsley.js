@@ -4,7 +4,7 @@
     var $root = $playButton.closest('.example-group, body')
     var html = $.trim($root.find('div.example').html());
     var js = $.trim($root.find('script.example, .example-script').text());
-
+    var editors = $playButton.attr('data-editors') || '101';
     createCodeExample();
 
     function createCodeExample() {
@@ -39,7 +39,7 @@
 
       var $input = $('<input type="hidden" name="data">')
         .val(JSON.stringify(data));
-      var $form = $('<form action="http://codepen.io/pen/define?editors=101" method="POST" target="_blank">')
+      var $form = $('<form action="http://codepen.io/pen/define?editors='+editors+'" method="POST" target="_blank">')
         .append($input)
         .appendTo($('body')) // Required to work on Firefox...
         .submit();

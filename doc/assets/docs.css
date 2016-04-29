@@ -245,3 +245,6 @@ h3 {
   font-weight: 500;
   color: #999;
 }
+.hidden, .example-script {
+  display: none;
+}

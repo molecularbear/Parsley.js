@@ -1,42 +1,49 @@
 (function() {
-  var html = $.trim($('div.example').html());
-  var js = $.trim($('script.example').text());
-  function createCodeExample() {
-    $('code.example').text(
-      html +
-      '\n\n<' + 'script type="text/javascript">\n' +
-      js +
-      '\n<' + '/script>\n'
-    );
-  }
+  function setupExample($playButton) {
+    $playButton.click(launchEditor).html($playButton.html().replace('CodePen', svg))
+    var $root = $playButton.closest('.example-group, body')
+    var html = $.trim($root.find('div.example').html());
+    var js = $.trim($root.find('script.example, .example-script').text());
 
-  function launchEditor() {
-    var css = $.trim($('style.example').text());
-    var distUrl = 'https://rawgit.com/guillaumepotier/Parsley.js/' + window.Parsley.version;
-    var data = {
-      title: $(document).attr('title'),
-      description: "Where does this show???",
-      html: html,
-      js: js,
-      css: css + '\nhtml.codepen body {\n  margin: 1em;\n}\n',
-      html_classes: 'codepen',
-      js_external: [
-        '//code.jquery.com/jquery-2.1.3.js',
-        distUrl + '/dist/parsley.js'
-      ].join(';'),
-      css_external: [
-        distUrl + '/bower_components/bootstrap/dist/css/bootstrap.css',
-        distUrl + '/doc/assets/docs.css',
-        distUrl + '/src/parsley.css'
-      ].join(';')
-    };
+    createCodeExample();
 
-    var $input = $('<input type="hidden" name="data">')
-      .val(JSON.stringify(data));
-    var $form = $('<form action="http://codepen.io/pen/define?editors=101" method="POST" target="_blank">')
-      .append($input)
-      .appendTo($('body')) // Required to work on Firefox...
-      .submit();
+    function createCodeExample() {
+      $('code.example').text(
+        html +
+        '\n\n<' + 'script type="text/javascript">\n' +
+        js +
+        '\n<' + '/script>\n'
+      );
+    }
+
+    function launchEditor(evt) {
+      var css = $.trim($root.find('style.example').text());
+      var distUrl = 'https://rawgit.com/guillaumepotier/Parsley.js/' + window.Parsley.version;
+      var data = {
+        title: $(document).attr('title'),
+        description: "Where does this show???",
+        html: html,
+        js: js,
+        css: css + '\nhtml.codepen body {\n  margin: 1em;\n}\n',
+        html_classes: 'codepen',
+        js_external: [
+          '//code.jquery.com/jquery-2.1.3.js',
+          distUrl + '/dist/parsley.js'
+        ].join(';'),
+        css_external: [
+          distUrl + '/bower_components/bootstrap/dist/css/bootstrap.css',
+          distUrl + '/doc/assets/docs.css',
+          distUrl + '/src/parsley.css'
+        ].join(';')
+      };
+
+      var $input = $('<input type="hidden" name="data">')
+        .val(JSON.stringify(data));
+      var $form = $('<form action="http://codepen.io/pen/define?editors=101" method="POST" target="_blank">')
+        .append($input)
+        .appendTo($('body')) // Required to work on Firefox...
+        .submit();
+    }
   }
 
   function track() {
@@ -50,13 +57,13 @@
   }
 
   function init() {
-    createCodeExample();
-
     try {
       hljs.initHighlightingOnLoad();
     } catch ( err ) {}
 
-    $('.play').html($('.play').html().replace('CodePen', svg)).click(launchEditor);
+    $('.play').each(function(_, elem) {
+      setupExample($(elem))
+    });
 
     track();
   }

@@ -220,25 +220,35 @@
           <h3 id="usage-configuration">Configuration</h3>
           <h4>Data attributes and javascript</h4>
           <p>
-            The multiple options can be specified using data attributes and javascript:
+            The multiple options can be specified using data attributes or javascript.
           </p>
-<pre><code>&lt;input id="first" data-parsley-maxlength="42" value="hello"/&gt;
-&lt;input id="second" value="world"/&gt;
-[...]
-&lt;script&gt;
-var instance = $('#first').parsley();
-console.log(instance.isValid()); // maxlength is 42, so field is valid
-$('#first').attr('data-parsley-maxlength', 4);
-console.log(instance.isValid()); // No longer valid, as maxlength is 4
-// You can access and override options in javascript too:
-instance.options.maxlength++;
-console.log(instance.isValid()); // Back to being valid, as maxlength is 5
-// Alternatively, the options can be specified the first time a form/field is bound:
-var otherInstance = $('#second').parsley({
-  maxlength: 10
-});
-console.log(otherInstance.options); // Shows that maxlength will be 10 for this field
-</code></pre>
+          <p>Here are the different ways to specify the option 'validate-if-empty':</p>
+          <ul>
+            <li><b>data attribute</b>: <code>&lt;input data-parsley-validate-if-empty="true"&gt;</code></li>
+            <li><b>javascript</b>: <code>$('#elem').parsley().options.validateIfEmpty = true</code></li>
+            <li><b>javascript</b> (when binding for the first time): <code>$('#elem').parsley({validateIfEmpty: true})</code></li>
+          </ul>
+          <div class="example-group">
+            <p>Here's a <a href="#" class="play">detailed example</a></p>
+            <div class="example hidden">
+              <input id="first" data-parsley-maxlength="42" value="hello"/>
+              <input id="second" value="world"/>
+            </div>
+            <div class="example-script">
+              var instance = $('#first').parsley();
+              console.log('maxlength is 42, so field is valid', instance.isValid());
+              $('#first').attr('data-parsley-maxlength', 4);
+              console.log('No longer valid, as maxlength is 4', instance.isValid());
+              // You can access and override options in javascript too:
+              instance.options.maxlength++;
+              console.log('Back to being valid, as maxlength is 5', instance.isValid());
+              // Alternatively, the options can be specified the first time a form/field is bound:
+              var otherInstance = $('#second').parsley({
+                maxlength: 10
+              });
+              console.log('maxlength was initialized with 10', otherInstance.options.maxlength);
+            <div>
+          </div>
           <p>
             As shown in the previous example, Parsley will actualize the options from the data attributes whenever it needs to validate a field.
           </p>

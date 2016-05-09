@@ -140,7 +140,7 @@ var ParsleyUtils = {
     var result;
 
     var later = function () {
-      var last = _.now() - timestamp;
+      var last = ParsleyUtils.now() - timestamp;
 
       if (last < wait && last >= 0) {
         timeout = setTimeout(later, wait - last);
@@ -156,7 +156,7 @@ var ParsleyUtils = {
     return function () {
       context = this;
       args = arguments;
-      timestamp = _.now();
+      timestamp = ParsleyUtils.now();
       var callNow = immediate && !timeout;
       if (!timeout) timeout = setTimeout(later, wait);
       if (callNow) {

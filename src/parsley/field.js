@@ -17,10 +17,10 @@ var ParsleyField = function (field, domOptions, options, parsleyFormInstance) {
   this.domOptions = domOptions;
 
   var that = this;
-  if (this.domOptions.debounce) {
+  if (this.options.debounce) {
     this.debouncedValidate = ParsleyUtils.debounce(function () {
       return that.validate();
-    }, this.domOptions.debounce);
+    }, this.options.debounce);
   }
 
   // Initialize some properties
